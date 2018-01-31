@@ -1,3 +1,4 @@
+import binascii
 import socket
 
 
@@ -16,7 +17,7 @@ def _denormalize_(value):
     return int(round((value + 1.0)*127.5))
 
 
-idle_command = '6680800180008199'.decode('hex')
+idle_command = binascii.unhexlify(b'6680800180008199')
 
 
 def get_command_string(
@@ -39,14 +40,14 @@ def get_command_string(
         'land': 0x0,  # TODO: fix
     }[command]
     checksum = roll ^ pitch ^ throttle ^ yaw ^ command
-    return '66{:02x}{:02x}{:02x}{:02x}{cmd:02x}{csum:02x}99'.format(
+    return binascii.unhexlify('66{:02x}{:02x}{:02x}{:02x}{cmd:02x}{csum:02x}99'.format(
         roll,
         pitch,
         throttle,
         yaw,
         cmd=command,
         csum=checksum,
-    ).decode('hex')
+    ))
 
 
 class Drone(object):
